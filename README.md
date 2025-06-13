@@ -1,4 +1,6 @@
-# ssafy-archive-AOS
+# SSAFY Community Mobile App
+## 6월 토이프로젝트
+<br>
 ```
 app/src/main/java/com/ssafy/community/
 ├── MainActivity.kt                    // 앱 진입점 (스플래시 또는 라우팅 처리)
