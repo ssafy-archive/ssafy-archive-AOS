@@ -27,21 +27,6 @@ class AuthViewModel : ViewModel() {
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            // TODO: Retrofit 연동 예정
-            if (name.isNotBlank() && loginId.isNotBlank()) {
-                onSuccess()
-            }
-        }
-    }
-
-    fun register(
-        name: String,
-        ssafyNumber: String,
-        loginId: String,
-        password: String,
-        onSuccess: () -> Unit
-    ) {
-        viewModelScope.launch {
             val result = userRepository.register(
                 RegisterRequest(
                     loginId = loginId,
