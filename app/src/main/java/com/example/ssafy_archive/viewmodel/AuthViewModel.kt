@@ -41,5 +41,18 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun changePassword(
+        oldPassword: String,
+        newPassword: String,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            // TODO: 실제 API 호출 예정
+            if (oldPassword.isNotBlank() && newPassword.isNotBlank()) {
+                onSuccess()
+            }
+        }
+    }
+
 
 }
