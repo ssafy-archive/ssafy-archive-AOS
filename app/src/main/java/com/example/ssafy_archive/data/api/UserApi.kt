@@ -1,9 +1,9 @@
 package com.example.ssafy_archive.data.api
 
-import retrofit2.http.Body
-import retrofit2.http.POST
+import retrofit2.http.*
 import retrofit2.Response
 
+// 회원가입 요청/응답 DTO
 data class RegisterRequest(
     val loginId: String,
     val password: String,
@@ -24,7 +24,31 @@ data class UserDto(
     val userRole: String
 )
 
+// 비밀번호 변경 요청/응답 DTO
+data class ChangePasswordRequest(
+    val oldPassword: String,
+    val newPassword: String
+)
+
+data class GenericSuccessResponse(
+    val code: Int,
+    val body: SuccessBody
+)
+
+data class SuccessBody(
+    val success: Boolean
+)
+
+// Retrofit 인터페이스
 interface UserApi {
+
     @POST("/api/v1/user")
     suspend fun register(@Body request: RegisterRequest): Response<RegisterResponse>
+
+    @PUT("/api/v1/user/{userId}/password")
+    suspend fun changePassword(
+        @Path("userId") userId: Int,
+        @Body request: ChangePasswordRequest,
+        @Header("Authorization") token: String
+    ): Response<GenericSuccessResponse>
 }
