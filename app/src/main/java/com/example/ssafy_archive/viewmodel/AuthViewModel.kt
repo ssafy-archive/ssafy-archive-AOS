@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ssafy_archive.data.api.RegisterRequest
+import com.example.ssafy_archive.data.api.UserDto
 import com.example.ssafy_archive.data.repository.UserRepository
 import com.example.ssafy_archive.utils.SharedPrefsManager
 import kotlinx.coroutines.launch
@@ -59,6 +60,28 @@ class AuthViewModel : ViewModel() {
                 accessToken = prefs.accessToken.orEmpty()
             )
 
+            if (result) onSuccess()
+        }
+    }
+
+    fun getUserInfo(onResult: (UserDto) -> Unit) {
+        viewModelScope.launch {
+            val prefs = SharedPrefsManager(App.instance)
+            val result = userRepository.getUserInfo(
+                accessToken = prefs.accessToken.orEmpty()
+            )
+            result?.let { onResult(it) }
+        }
+    }
+
+    fun updateUserInfo(name: String, ssafyNumber: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val prefs = SharedPrefsManager(App.instance)
+            val result = userRepository.updateUserInfo(
+                name = name,
+                ssafyNumber = ssafyNumber,
+                accessToken = prefs.accessToken.orEmpty()
+            )
             if (result) onSuccess()
         }
     }

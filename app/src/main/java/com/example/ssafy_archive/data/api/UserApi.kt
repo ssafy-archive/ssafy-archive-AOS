@@ -39,6 +39,16 @@ data class SuccessBody(
     val success: Boolean
 )
 
+data class UpdateUserRequest(
+    val name: String,
+    val ssafyNumber: String
+)
+
+data class UpdateUserInfoRequest(
+    val name: String,
+    val ssafyNumber: String
+)
+
 // Retrofit 인터페이스
 interface UserApi {
 
@@ -49,6 +59,15 @@ interface UserApi {
     suspend fun changePassword(
         @Path("userId") userId: Int,
         @Body request: ChangePasswordRequest,
+        @Header("Authorization") token: String
+    ): Response<GenericSuccessResponse>
+
+    @GET("/api/v1/user")
+    suspend fun getUserInfo(@Header("Authorization") token: String): Response<RegisterResponse>
+
+    @PUT("/api/v1/user")
+    suspend fun updateUserInfo(
+        @Body request: UpdateUserInfoRequest,
         @Header("Authorization") token: String
     ): Response<GenericSuccessResponse>
 }

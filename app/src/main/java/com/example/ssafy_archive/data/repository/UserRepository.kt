@@ -2,7 +2,9 @@ package com.example.ssafy_archive.data.repository
 
 import com.example.ssafy_archive.data.api.ChangePasswordRequest
 import com.example.ssafy_archive.data.api.RegisterRequest
+import com.example.ssafy_archive.data.api.UpdateUserInfoRequest
 import com.example.ssafy_archive.data.api.UserApi
+import com.example.ssafy_archive.data.api.UserDto
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -32,6 +34,23 @@ class UserRepository {
             request = ChangePasswordRequest(oldPassword, newPassword),
             token = "Bearer $accessToken"
         )
+        return response.isSuccessful && response.body()?.body?.success == true
+    }
+
+    // UserRepository.kt
+
+    suspend fun getUserInfo(accessToken: String): UserDto? {
+        val response = api.getUserInfo(accessToken)
+        return if (response.isSuccessful) response.body()?.body else null
+    }
+
+    suspend fun updateUserInfo(
+        name: String,
+        ssafyNumber: String,
+        accessToken: String
+    ): Boolean {
+        val request = UpdateUserInfoRequest(name, ssafyNumber)
+        val response = api.updateUserInfo(request, accessToken)
         return response.isSuccessful && response.body()?.body?.success == true
     }
 
