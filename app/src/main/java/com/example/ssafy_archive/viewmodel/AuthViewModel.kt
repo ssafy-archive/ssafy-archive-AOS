@@ -13,15 +13,6 @@ class AuthViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
 
-    fun login(loginId: String, password: String, onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            // TODO: 추후 Retrofit 연동
-            if (loginId.isNotBlank() && password.isNotBlank()) {
-                onSuccess()
-            }
-        }
-    }
-
     fun register(
         name: String,
         ssafyNumber: String,
@@ -83,6 +74,23 @@ class AuthViewModel : ViewModel() {
                 accessToken = prefs.accessToken.orEmpty()
             )
             if (result) onSuccess()
+        }
+    }
+
+    fun login(loginId: String, password: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val response = userRepository.login(loginId, password)
+            if (response != null) {
+                val prefs = SharedPrefsManager(App.instance)
+                prefs.accessToken = response.body.accessToken
+                prefs.refreshToken = response.body.refreshToken
+                prefs.userId = response.body.user.userId.toString()
+                prefs.loginId = response.body.user.loginId
+                prefs.name = response.body.user.name
+                prefs.ssafyNumber = response.body.user.ssafyNumber
+                prefs.userRole = response.body.user.userRole
+                onSuccess()
+            }
         }
     }
 

@@ -54,4 +54,13 @@ class UserRepository {
         return response.isSuccessful && response.body()?.body?.success == true
     }
 
+    suspend fun login(
+        loginId: String,
+        password: String
+    ): LoginResponse? {
+        val request = LoginRequest(loginId, password)
+        val response = api.login(request)
+        return if (response.isSuccessful) response.body() else null
+    }
+
 }
