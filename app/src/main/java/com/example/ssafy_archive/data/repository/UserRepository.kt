@@ -1,5 +1,6 @@
 package com.example.ssafy_archive.data.repository
 
+import com.example.ssafy_archive.data.api.AuthInterceptor
 import com.example.ssafy_archive.data.api.ChangePasswordRequest
 import com.example.ssafy_archive.data.api.LoginRequest
 import com.example.ssafy_archive.data.api.LoginResponse
@@ -7,14 +8,20 @@ import com.example.ssafy_archive.data.api.RegisterRequest
 import com.example.ssafy_archive.data.api.UpdateUserInfoRequest
 import com.example.ssafy_archive.data.api.UserApi
 import com.example.ssafy_archive.data.api.UserDto
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class UserRepository {
 
     private val api: UserApi by lazy {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+
         Retrofit.Builder()
-            .baseUrl("http://YOUR_API_BASE_URL") // TODO: 실제 URL로 교체
+            .baseUrl("http://YOUR_API_BASE_URL") // 나중에 교체
+            .client(client) // AuthInterceptor - 모든 요청에 자동으로 토큰이 붙도록 설정
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UserApi::class.java)
@@ -38,8 +45,6 @@ class UserRepository {
         )
         return response.isSuccessful && response.body()?.body?.success == true
     }
-
-    // UserRepository.kt
 
     suspend fun getUserInfo(accessToken: String): UserDto? {
         val response = api.getUserInfo(accessToken)
