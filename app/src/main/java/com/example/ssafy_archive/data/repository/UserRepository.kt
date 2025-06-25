@@ -1,6 +1,8 @@
 package com.example.ssafy_archive.data.repository
 
 import com.example.ssafy_archive.data.api.ChangePasswordRequest
+import com.example.ssafy_archive.data.api.LoginRequest
+import com.example.ssafy_archive.data.api.LoginResponse
 import com.example.ssafy_archive.data.api.RegisterRequest
 import com.example.ssafy_archive.data.api.UpdateUserInfoRequest
 import com.example.ssafy_archive.data.api.UserApi

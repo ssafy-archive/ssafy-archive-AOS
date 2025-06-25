@@ -28,9 +28,9 @@ data class LoginResponse(
 )
 
 data class LoginBody(
-    val user: UserDto,
     val accessToken: String,
-    val refreshToken: String
+    val refreshToken: String,
+    val user: UserDto
 )
 
 // 유저 정보 공통 DTO
