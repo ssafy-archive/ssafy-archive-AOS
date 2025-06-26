@@ -9,18 +9,24 @@ import com.example.ssafy_archive.data.api.UpdateUserInfoRequest
 import com.example.ssafy_archive.data.api.UserApi
 import com.example.ssafy_archive.data.api.UserDto
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class UserRepository {
 
     private val api: UserApi by lazy {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
         val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
+            .addInterceptor(loggingInterceptor)   // 로그 찍기용
+            .addInterceptor(AuthInterceptor())    // 토큰 자동 주입
             .build()
 
         Retrofit.Builder()
-            .baseUrl("http://YOUR_API_BASE_URL") // 나중에 교체
+            .baseUrl("http://10.0.2.2:8080/") // 나중에 교체
             .client(client) // AuthInterceptor - 모든 요청에 자동으로 토큰이 붙도록 설정
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -62,10 +68,13 @@ class UserRepository {
     }
 
     suspend fun login(
-        loginId: String,
+        id: String,
         password: String
     ): LoginResponse? {
-        val request = LoginRequest(loginId, password)
+        val request = LoginRequest(
+            id = id.trim(),
+            password = password.trim()
+        )
         val response = api.login(request)
         return if (response.isSuccessful) response.body() else null
     }

@@ -55,8 +55,9 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
-    var loginId by remember { mutableStateOf("") }
+    var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -65,14 +66,16 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text("SSAFY 커뮤니티", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = loginId,
-            onValueChange = { loginId = it },
+            value = id,
+            onValueChange = {
+                id = it
+                errorMessage = null // 입력값 바뀌면 에러 초기화
+            },
             label = { Text("아이디") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -82,7 +85,10 @@ fun LoginScreen(
 
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                errorMessage = null
+            },
             label = { Text("비밀번호") },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
@@ -90,11 +96,22 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // 에러 메시지 표시
+        errorMessage?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = it, color = Color.Red)
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
-                viewModel.login(loginId, password, onSuccess = onLoginSuccess)
+                viewModel.login(
+                    id,
+                    password,
+                    onSuccess = onLoginSuccess,
+                    onError = { msg -> errorMessage = msg }
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -113,3 +130,4 @@ fun LoginScreen(
         }
     }
 }
+

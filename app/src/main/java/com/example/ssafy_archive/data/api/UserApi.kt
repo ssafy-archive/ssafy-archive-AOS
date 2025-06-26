@@ -5,10 +5,10 @@ import retrofit2.Response
 
 // 회원가입 요청/응답 DTO
 data class RegisterRequest(
-    val loginId: String,
-    val password: String,
     val name: String,
-    val ssafyNumber: String
+    val ssafyNumber: String,
+    val loginId: String,
+    val password: String
 )
 
 data class RegisterResponse(
@@ -18,25 +18,25 @@ data class RegisterResponse(
 
 // 로그인 요청/응답 DTO
 data class LoginRequest(
-    val loginId: String,
+    val id: String,
     val password: String
 )
 
-data class LoginResponse(
-    val code: Int,
-    val body: LoginBody
+data class TokenBody(
+    val accessToken: String,
+    val refreshToken: String
 )
 
-data class LoginBody(
-    val accessToken: String,
-    val refreshToken: String,
-    val user: UserDto
+// 2) 최종 로그인 응답 래퍼
+data class LoginResponse(
+    val code: Int,
+    val body: TokenBody
 )
 
 // 유저 정보 공통 DTO
 data class UserDto(
     val userId: Int,
-    val loginId: String,
+    val id: String,
     val name: String,
     val ssafyNumber: String,
     val userRole: String

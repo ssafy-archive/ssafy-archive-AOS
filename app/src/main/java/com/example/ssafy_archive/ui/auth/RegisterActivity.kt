@@ -43,7 +43,7 @@ fun RegisterScreen(
 ) {
     var name by remember { mutableStateOf("") }
     var ssafyNumber by remember { mutableStateOf("") }
-    var loginId by remember { mutableStateOf("") }
+    var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
@@ -75,8 +75,8 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
-            value = loginId,
-            onValueChange = { loginId = it },
+            value = id,
+            onValueChange = { id = it },
             label = { Text("아이디") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -94,12 +94,19 @@ fun RegisterScreen(
 
         Button(
             onClick = {
-                viewModel.register(name, ssafyNumber, loginId, password, onRegisterSuccess)
+                viewModel.register(
+                    name        = name,
+                    ssafyNumber = ssafyNumber,
+                    loginId     = id,
+                    password    = password,
+                    onSuccess   = onRegisterSuccess
+                )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text("회원가입 완료", color = MaterialTheme.colorScheme.onPrimary)
         }
+
     }
 }

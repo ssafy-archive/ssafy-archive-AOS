@@ -7,15 +7,25 @@ import com.example.ssafy_archive.viewmodel.App
 
 class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val prefs = SharedPrefsManager(App.instance)
-        val token = prefs.accessToken.orEmpty()
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $token")
-            .build()
-        return chain.proceed(request)
+        val req = chain.request()
+        val path = req.url.encodedPath        // "/api/v1/user", "/api/v1/user/login" 등
+        val method = req.method               // "GET", "POST" 등
+
+        // public API: 회원가입, 로그인, (토큰 리프레시) 요청은 토큰 스킵
+        val isRegister = method == "POST" && path == "/api/v1/user"
+        val isLogin    = method == "POST" && path == "/api/v1/user/login"
+        val isRefresh  = method == "POST" && path == "/api/v1/user/refresh"
+
+        if (isRegister || isLogin || isRefresh) {
+            return chain.proceed(req)
+        }
+
+        // 그 외 요청에만 SharedPrefs의 토큰을 헤더에 붙임
+        val token = SharedPrefsManager(App.instance).accessToken
+        val builder = req.newBuilder()
+        if (!token.isNullOrBlank()) {
+            builder.addHeader("Authorization", "Bearer $token")
+        }
+        return chain.proceed(builder.build())
     }
 }
-
-// 자동 헤더 주입 적용
-// accessToken을 매 요청마다 @Header("Authorization")에 직접 넘기고 있는데,
-// 이걸 Interceptor를 사용해서 자동으로 헤더에 주입하면 더 깔끔해진다.

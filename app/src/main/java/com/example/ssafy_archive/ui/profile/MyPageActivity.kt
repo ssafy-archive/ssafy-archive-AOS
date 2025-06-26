@@ -37,16 +37,16 @@ fun MyPageScreen(
     viewModel: AuthViewModel = viewModel(),
     onSaveSuccess: () -> Unit
 ) {
+    var id by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var ssafyNumber by remember { mutableStateOf("") }
-    var loginId by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.getUserInfo(
             onResult = { user ->
                 name = user.name
                 ssafyNumber = user.ssafyNumber
-                loginId = user.loginId
+                id = user.id
             }
         )
     }
@@ -61,7 +61,7 @@ fun MyPageScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = loginId,
+            value = id,
             onValueChange = {},
             label = { Text("아이디") },
             enabled = false,

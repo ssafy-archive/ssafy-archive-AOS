@@ -27,7 +27,7 @@ class SharedPrefsManager(context: Context) {
         get() = prefs.getString(KEY_USER_ID, null)
         set(value) = prefs.edit().putString(KEY_USER_ID, value).apply()
 
-    var loginId: String?
+    var id: String?
         get() = prefs.getString(KEY_LOGIN_ID, null)
         set(value) = prefs.edit().putString(KEY_LOGIN_ID, value).apply()
 

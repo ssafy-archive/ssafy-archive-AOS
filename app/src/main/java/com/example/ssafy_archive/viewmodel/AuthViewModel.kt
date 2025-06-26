@@ -23,10 +23,10 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             val result = userRepository.register(
                 RegisterRequest(
-                    loginId = loginId,
-                    password = password,
                     name = name,
-                    ssafyNumber = ssafyNumber
+                    ssafyNumber = ssafyNumber,
+                    loginId = loginId,
+                    password = password
                 )
             )
             if (result) {
@@ -77,19 +77,26 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun login(loginId: String, password: String, onSuccess: () -> Unit) {
+    fun login(
+        id: String, password: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
-            val response = userRepository.login(loginId, password)
-            if (response != null) {
-                val prefs = SharedPrefsManager(App.instance)
-                prefs.accessToken = response.body.accessToken
-                prefs.refreshToken = response.body.refreshToken
-                prefs.userId = response.body.user.userId.toString()
-                prefs.loginId = response.body.user.loginId
-                prefs.name = response.body.user.name
-                prefs.ssafyNumber = response.body.user.ssafyNumber
-                prefs.userRole = response.body.user.userRole
-                onSuccess()
+            try {
+                val resp = userRepository.login(id, password)
+                if (resp?.code == 200) {
+                    val tokenBody = resp.body
+                    val prefs = SharedPrefsManager(App.instance)
+                    prefs.accessToken  = tokenBody.accessToken
+                    prefs.refreshToken = tokenBody.refreshToken
+                    onSuccess()
+                } else {
+                    onError("아이디 또는 비밀번호가 잘못되었습니다.")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError("서버 연결에 실패했습니다.")
             }
         }
     }
