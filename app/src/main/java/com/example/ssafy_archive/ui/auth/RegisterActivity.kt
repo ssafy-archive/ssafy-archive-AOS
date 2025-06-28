@@ -33,7 +33,6 @@ class RegisterActivity : ComponentActivity() {
                             finish()
                         },
                         onBackClick = {
-                            startActivity(Intent(this, IntroActivity::class.java))
                             finish()
                         }
                     )

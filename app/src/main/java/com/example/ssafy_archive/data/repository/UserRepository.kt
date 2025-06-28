@@ -26,7 +26,7 @@ class UserRepository {
             .build()
 
         Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/") // 나중에 교체
+            .baseUrl("http://10.0.2.2:8080/") // 나중에 교체 http://10.0.2.2:8080/
             .client(client) // AuthInterceptor - 모든 요청에 자동으로 토큰이 붙도록 설정
             .addConverterFactory(GsonConverterFactory.create())
             .build()

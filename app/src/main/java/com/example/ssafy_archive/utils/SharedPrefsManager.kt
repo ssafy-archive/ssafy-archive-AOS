@@ -19,9 +19,8 @@ class SharedPrefsManager(context: Context) {
         private const val KEY_REFRESH_TOKEN = "refresh_token"
     }
 
-    var isLoggedIn: Boolean
-        get() = prefs.getBoolean(KEY_IS_LOGGED_IN, false)
-        set(value) = prefs.edit().putBoolean(KEY_IS_LOGGED_IN, value).apply()
+    val isLoggedIn: Boolean
+        get() = !accessToken.isNullOrBlank()
 
     var userId: String?
         get() = prefs.getString(KEY_USER_ID, null)
@@ -50,6 +49,13 @@ class SharedPrefsManager(context: Context) {
     var refreshToken: String?
         get() = prefs.getString(KEY_REFRESH_TOKEN, null)
         set(value) = prefs.edit().putString(KEY_REFRESH_TOKEN, value).apply()
+
+    fun clearTokens() {
+        prefs.edit()
+            .remove(KEY_ACCESS_TOKEN)
+            .remove(KEY_REFRESH_TOKEN)
+            .apply()
+    }
 
     fun logout() {
         prefs.edit().clear().apply()
