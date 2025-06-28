@@ -1,5 +1,6 @@
 package com.example.ssafy_archive.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -14,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.example.ssafy_archive.ui.theme.SsafyarchiveTheme
 import com.example.ssafy_archive.viewmodel.AuthViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ssafy_archive.ui.intro.IntroActivity
+import com.example.ssafy_archive.utils.SharedPrefsManager
 
 class MyPageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +27,12 @@ class MyPageActivity : ComponentActivity() {
                     MyPageScreen(
                         onSaveSuccess = {
                             Toast.makeText(this, "정보가 수정되었습니다.", Toast.LENGTH_SHORT).show()
+                        },
+                        onLogout = {
+                            SharedPrefsManager(this).logout()
+                            val intent = Intent(this, IntroActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
                         }
                     )
                 }
@@ -35,7 +44,8 @@ class MyPageActivity : ComponentActivity() {
 @Composable
 fun MyPageScreen(
     viewModel: AuthViewModel = viewModel(),
-    onSaveSuccess: () -> Unit
+    onSaveSuccess: () -> Unit,
+    onLogout: () -> Unit
 ) {
     var id by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -93,6 +103,15 @@ fun MyPageScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("저장")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedButton(
+            onClick = { onLogout() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("로그아웃")
         }
     }
 }

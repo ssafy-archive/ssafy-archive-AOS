@@ -37,7 +37,6 @@ class LoginActivity : ComponentActivity() {
                             finish()
                         },
                         onBackClick = {
-                            startActivity(Intent(this, com.example.ssafy_archive.ui.intro.IntroActivity::class.java))
                             finish()
                         }
                     )
