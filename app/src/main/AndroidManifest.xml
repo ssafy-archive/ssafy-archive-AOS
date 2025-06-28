@@ -20,11 +20,17 @@
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Ssafyarchive">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.intro.IntroActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Ssafyarchive" />
 
         <activity
             android:name=".MainActivity"

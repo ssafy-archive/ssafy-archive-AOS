@@ -16,6 +16,10 @@ import com.example.ssafy_archive.R
 import com.example.ssafy_archive.ui.theme.SsafyarchiveTheme
 import com.example.ssafy_archive.ui.auth.LoginActivity
 import kotlinx.coroutines.delay
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
+import androidx.compose.material3.Text
+import com.example.ssafy_archive.ui.intro.IntroActivity
 
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +27,7 @@ class SplashActivity : ComponentActivity() {
         setContent {
             SsafyarchiveTheme {
                 SplashScreen {
-                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, IntroActivity::class.java))
                     finish()
                 }
             }
@@ -34,18 +38,44 @@ class SplashActivity : ComponentActivity() {
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
     LaunchedEffect(Unit) {
-        delay(1500) // 1.5초 대기
+        delay(1500)
         onTimeout()
     }
 
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF65BDEA))
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ssarchive_logo),
-            contentDescription = "SSAFY Archive Logo",
-            modifier = Modifier.size(180.dp)
+        // 가운데: 로고 + 버전
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ssarchive_w),
+                contentDescription = "SSAFY Archive Logo",
+                modifier = Modifier.size(180.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "ver. 1.0.0",
+                color = Color.White
+            )
+        }
+
+        // 아래쪽: All rights reserved
+        Text(
+            text = "SSARCHIVE. All rights reserved.",
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 48.dp)
         )
     }
 }
+
+
+// 65BDEA
